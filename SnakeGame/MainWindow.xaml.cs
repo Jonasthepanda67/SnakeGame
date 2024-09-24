@@ -16,11 +16,23 @@ namespace SnakeGame
     /// </summary>
     public partial class MainWindow : Window
     {
+        private System.Windows.Threading.DispatcherTimer gameTickTimer = new System.Windows.Threading.DispatcherTimer();
         private const int SnakeSquareSize = 20;
+
+        private SolidColorBrush snakeBodyBrush = Brushes.Green;
+        private SolidColorBrush snakeHeadBrush = Brushes.YellowGreen;
+        private List<SnakePart> snakeParts = new List<SnakePart>();
+
+        public enum SnakeDirection
+        { Left, Right, Up, Down }
+
+        private SnakeDirection snakeDirection = SnakeDirection.Right;
+        private int snakeLength;
 
         public MainWindow()
         {
             InitializeComponent();
+            gameTickTimer.Tick += GameTickTimer_Tick;
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -41,7 +53,7 @@ namespace SnakeGame
                 {
                     Width = SnakeSquareSize,
                     Height = SnakeSquareSize,
-                    Fill = nextIsOdd ? Brushes.White : Brushes.Black,
+                    Fill = nextIsOdd ? Brushes.White : Brushes.Black
                 };
                 GameArea.Children.Add(rect);
                 Canvas.SetTop(rect, nextY);
@@ -62,6 +74,81 @@ namespace SnakeGame
                     doneDrawingBackground = true;
                 }
             }
+        }
+
+        private void DrawSnake()
+        {
+            foreach (SnakePart snakePart in snakeParts)
+            {
+                if (snakePart.UIElement == null)
+                {
+                    snakePart.UIElement = new Rectangle()
+                    {
+                        Width = SnakeSquareSize,
+                        Height = SnakeSquareSize,
+                        Fill = (snakePart.IsHead ? snakeHeadBrush : snakeBodyBrush)
+                    };
+                    GameArea.Children.Add(snakePart.UIElement);
+                    Canvas.SetTop(snakePart.UIElement, snakePart.Position.Y);
+                    Canvas.SetLeft(snakePart.UIElement, snakePart.Position.X);
+                }
+            }
+        }
+
+        private void MoveSnake()
+        {
+            //Removes the last part of the snake to prepare for the new part that gets added below
+            while (snakeParts.Count >= snakeLength)
+            {
+                GameArea.Children.Remove(snakeParts[0].UIElement);
+                snakeParts.RemoveAt(0);
+            }
+
+            //Now we add a new element to the snake which will be the new snake head and we will move everything that isn't a head to that body instead
+            foreach (SnakePart snakePart in snakeParts)
+            {
+                (snakePart.UIElement as Rectangle).Fill = snakeBodyBrush;
+                snakePart.IsHead = false;
+            }
+
+            //Based on the current direction then determine which direction the snake should expand
+            SnakePart snakeHead = snakeParts[snakeParts.Count - 1];
+            double nextX = snakeHead.Position.X;
+            double nextY = snakeHead.Position.Y;
+            switch (snakeDirection)
+            {
+                case SnakeDirection.Left:
+                    nextX -= SnakeSquareSize;
+                    break;
+
+                case SnakeDirection.Right:
+                    nextX += SnakeSquareSize;
+                    break;
+
+                case SnakeDirection.Up:
+                    nextY -= SnakeSquareSize;
+                    break;
+
+                case SnakeDirection.Down:
+                    nextY += SnakeSquareSize;
+                    break;
+            }
+
+            //Now we add the new head part to our list of snake parts
+            snakeParts.Add(new SnakePart()
+            {
+                Position = new Point(nextX, nextY),
+                IsHead = true
+            });
+
+            //Draw snake again part
+            DrawSnake();
+            //Collision check method goes here!!!
+        }
+
+        private void GameTickTimer_Tick(object sender, EventArgs e)
+        {
+            MoveSnake();
         }
     }
 }
