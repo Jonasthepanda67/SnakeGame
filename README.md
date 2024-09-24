@@ -12,14 +12,19 @@ This was a school project where we had to create our own Snake game and this is 
 ## Todo
 - [X] Add Function for board creation
 - [X] Add Snake and Snake movement
-- [ ] Add Start game function
-- [ ] Add Snake food/fruit
+- [X] Add Start game function
+- [X] Add Snake food/fruit
 - [ ] Add Points
 - [ ] Add different difficulties
 - [ ] Add Nightmare Mode
 - [ ] Add different Board and Snake designs/styles
 
 ## Changelog
+
+**V0.3.0**
+
+* Added Fruit
+* Added function to find/locate Fruit
 
 **V0.2.0**
 
