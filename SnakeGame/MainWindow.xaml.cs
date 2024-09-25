@@ -17,6 +17,7 @@ namespace SnakeGame
     public partial class MainWindow : Window
     {
         private System.Windows.Threading.DispatcherTimer gameTickTimer = new System.Windows.Threading.DispatcherTimer();
+        private bool gameEnded = false;
         private const int SnakeSquareSize = 20;
         private const int SnakeStartLength = 3;
         private const int SnakeStartSpeed = 400;
@@ -34,6 +35,7 @@ namespace SnakeGame
         private Random rnd = new Random();
         private UIElement snakeFood = null;
         private SolidColorBrush foodBrush = Brushes.Red;
+        private int currentscore = 0;
 
         public MainWindow()
         {
@@ -49,14 +51,35 @@ namespace SnakeGame
 
         private void StartNewGame()
         {
+            foreach (SnakePart snakeBodyPart in snakeParts)
+            {
+                if (snakeBodyPart.UIElement != null)
+                {
+                    GameArea.Children.Remove(snakeBodyPart.UIElement);
+                }
+            }
+            snakeParts.Clear();
+            if (snakeFood != null)
+            {
+                GameArea.Children.Remove(snakeFood);
+            }
+
+            //Reset a few things
+            gameEnded = false;
+            currentscore = 0;
             snakeLength = SnakeStartLength;
             snakeDirection = SnakeDirection.Right;
             snakeParts.Add(new SnakePart() { Position = new Point(SnakeSquareSize * 5, SnakeSquareSize * 5) });
             gameTickTimer.Interval = TimeSpan.FromMilliseconds(SnakeStartSpeed);
 
+            //Draw the snake and some food
             DrawSnake();
             DrawSnakeFood();
 
+            //Update status
+            UpdateGameStatus();
+
+            //start the game
             gameTickTimer.IsEnabled = true;
         }
 
@@ -163,7 +186,9 @@ namespace SnakeGame
 
             //Draw snake again part
             DrawSnake();
-            //Collision check method goes here!!!
+
+            //Collision check time!!!
+            DoCollisionCheck();
         }
 
         private Point GetNextFoodPosition()
@@ -193,6 +218,99 @@ namespace SnakeGame
             GameArea.Children.Add(snakeFood);
             Canvas.SetTop(snakeFood, foodPosition.Y);
             Canvas.SetLeft(snakeFood, foodPosition.X);
+        }
+
+        private void Window_Keyup(object sender, KeyEventArgs e)
+        {
+            SnakeDirection originalSnakeDirection = snakeDirection;
+
+            if (gameEnded)
+            {
+                if (e.Key == Key.Space)
+                {
+                    StartNewGame();
+                }
+            }
+            else
+            {
+                switch (e.Key)
+                {
+                    case Key.Up:
+                        if (snakeDirection != SnakeDirection.Down)
+                            snakeDirection = SnakeDirection.Up;
+                        break;
+
+                    case Key.Down:
+                        if (snakeDirection != SnakeDirection.Up)
+                            snakeDirection = SnakeDirection.Down;
+                        break;
+
+                    case Key.Left:
+                        if (snakeDirection != SnakeDirection.Right)
+                            snakeDirection = SnakeDirection.Left;
+                        break;
+
+                    case Key.Right:
+                        if (snakeDirection != SnakeDirection.Left)
+                            snakeDirection = SnakeDirection.Right;
+                        break;
+
+                    case Key.Space:
+                        StartNewGame();
+                        break;
+                }
+                if (snakeDirection != originalSnakeDirection)
+                {
+                    MoveSnake();
+                }
+            }
+        }
+
+        private void DoCollisionCheck()
+        {
+            SnakePart snakeHead = snakeParts[snakeParts.Count - 1];
+
+            if ((snakeHead.Position.X == Canvas.GetLeft(snakeFood)) && (snakeHead.Position.Y == Canvas.GetTop(snakeFood)))
+            {
+                EatSnakeFood();
+                return;
+            }
+
+            if ((snakeHead.Position.Y < 0) || (snakeHead.Position.Y >= GameArea.ActualHeight) || (snakeHead.Position.X < 0) || (snakeHead.Position.X >= GameArea.ActualWidth))
+            {
+                EndGame();
+            }
+
+            foreach (SnakePart snakeBodyPart in snakeParts.Take(snakeParts.Count - 1))
+            {
+                if ((snakeHead.Position.X == snakeBodyPart.Position.X) && (snakeHead.Position.Y == snakeBodyPart.Position.Y))
+                {
+                    EndGame();
+                }
+            }
+        }
+
+        private void EatSnakeFood()
+        {
+            snakeLength++;
+            currentscore++;
+            int timerInterval = Math.Max(SnakeSpeedThreshold, (int)gameTickTimer.Interval.TotalMilliseconds - (currentscore * 2));
+            gameTickTimer.Interval = TimeSpan.FromMilliseconds(timerInterval);
+            GameArea.Children.Remove(snakeFood);
+            DrawSnakeFood();
+            UpdateGameStatus();
+        }
+
+        private void UpdateGameStatus()
+        {
+            this.Title = "Snake - Score: " + currentscore;
+        }
+
+        private void EndGame()
+        {
+            gameTickTimer.IsEnabled = false;
+            gameEnded = true;
+            MessageBox.Show("Ooops, seems like you died!\n\nTo Start a new game, press the space bar...", "Snake");
         }
 
         private void GameTickTimer_Tick(object sender, EventArgs e)
