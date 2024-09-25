@@ -14,12 +14,19 @@ This was a school project where we had to create our own Snake game and this is 
 - [X] Add Snake and Snake movement
 - [X] Add Start game function
 - [X] Add Snake food/fruit
-- [ ] Add Points
+- [X] Add Points
 - [ ] Add different difficulties
 - [ ] Add Nightmare Mode
 - [ ] Add different Board and Snake designs/styles
 
 ## Changelog
+
+**V1.0.0**
+
+* Added a start game function
+* Added handling for when the snake eats the fruit
+* Added handling for snake either hitting itself or a wall
+* Fixed snake being able to move after game over screen appeared
 
 **V0.3.0**
 
