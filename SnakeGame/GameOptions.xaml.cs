@@ -21,8 +21,10 @@ namespace SnakeGame
     {
         private string chosenBoardDesign = "White/Black";
         private string chosenSnakeDesign = "Green";
+        private string chosenFoodDesign = "Fruit";
         private List<string> boardDesigns;
         private List<string> snakeDesigns;
+        private List<string> foodDesigns;
         private string _checkedButton = "";
 
         private enum _gameDifficulty
@@ -33,6 +35,7 @@ namespace SnakeGame
             InitializeComponent();
             boardDesigns = new List<string>();
             snakeDesigns = new List<string>();
+            foodDesigns = new List<string>();
             InsertIntoDropdowns();
         }
 
@@ -64,19 +67,16 @@ namespace SnakeGame
         {
             if (_checkedButton != "" && _checkedButton is not null)
             {
-                if (cbbBoardDesign.SelectedItem is not null && cbbSnakeDesign.SelectedItem is not null)
+                if (cbbBoardDesign.SelectedItem is not null && cbbSnakeDesign.SelectedItem is not null && cbbFoodDesign is not null)
                 {
                     chosenBoardDesign = cbbBoardDesign.SelectedItem.ToString();
                     chosenSnakeDesign = cbbSnakeDesign.SelectedItem.ToString();
+                    chosenFoodDesign = cbbFoodDesign.SelectedItem.ToString();
                 }
-                MainWindow window = new MainWindow(_checkedButton, chosenBoardDesign, chosenSnakeDesign);
+                MainWindow window = new MainWindow(_checkedButton, chosenBoardDesign, chosenSnakeDesign, chosenFoodDesign);
                 window.Show();
                 this.Close();
             }
-        }
-
-        private void BtnHighscore_Click(object sender, RoutedEventArgs e)
-        {
         }
 
         private void InsertIntoDropdowns()
@@ -96,6 +96,12 @@ namespace SnakeGame
             snakeDesigns.Add("Black");
             snakeDesigns.Add("White");
             snakeDesigns.Add("Brown");
+            foodDesigns.Add("Fruit");
+            foodDesigns.Add("Vegetables");
+            foodDesigns.Add("Only Red");
+            foodDesigns.Add("Only Green");
+            foodDesigns.Add("Only Purple");
+            foodDesigns.Add("Only Orange");
 
             foreach (var design in boardDesigns)
             {
@@ -109,6 +115,13 @@ namespace SnakeGame
                 if (!cbbSnakeDesign.Items.Contains(design))
                 {
                     cbbSnakeDesign.Items.Add(design);
+                }
+            }
+            foreach (var design in foodDesigns)
+            {
+                if (!cbbFoodDesign.Items.Contains(design))
+                {
+                    cbbFoodDesign.Items.Add(design);
                 }
             }
         }
