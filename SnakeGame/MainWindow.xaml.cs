@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.ObjectModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
@@ -10,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Serialization;
 
 namespace SnakeGame
 {
@@ -19,18 +21,22 @@ namespace SnakeGame
     public partial class MainWindow : Window
     {
         private System.Windows.Threading.DispatcherTimer gameTickTimer = new System.Windows.Threading.DispatcherTimer();
+        private int actionsTaken = 0;
         private bool gameEnded = false;
         private int SnakeSquareSize = 50;
         private const int SnakeStartLength = 3;
         private const int SnakeStartSpeed = 400;
         private const int SnakeSpeedThreshold = 100;
+        private const int MaxHighscoreListEntryCount = 5;
 
         private SolidColorBrush snakeBodyBrush = Brushes.Green;
         private SolidColorBrush snakeHeadBrush = Brushes.YellowGreen;
         private List<SnakePart> snakeParts = new List<SnakePart>();
 
-        private string[] fruitPaths;
-        private List<string> Fruits = new();
+        private string fruitsPath = @"C:\\Users\U427797\source\repos\SnakeGame\SnakeGame\Fruits\";
+
+        //private string[] fruitPaths;
+        private List<string> Food = new();
 
         public enum SnakeDirection
         { Left, Right, Up, Down }
@@ -44,16 +50,24 @@ namespace SnakeGame
         private string _difficulty;
         private string _boardDesign;
         private string _snakeDesign;
+        private string _foodDesign;
         private bool NightMareMode = false;
 
-        public MainWindow(string ChosenDifficulty, string ChosenBoardDesign, string ChosenSnakeDesign)
+        public ObservableCollection<SnakeHighscore> HighscoreList
+        {
+            get; set;
+        } = new ObservableCollection<SnakeHighscore>();
+
+        public MainWindow(string ChosenDifficulty, string ChosenBoardDesign, string ChosenSnakeDesign, string ChosenFoodDesign)
         {
             InitializeComponent();
             gameTickTimer.Tick += GameTickTimer_Tick;
-            fruitPaths = Directory.GetFiles(@"C:\Users\U427797\source\repos\SnakeGame\SnakeGame\Fruits\");
+            //fruitPaths = Directory.GetFiles(@"C:\Users\U427797\source\repos\SnakeGame\SnakeGame\Fruits\"); //change this
             _boardDesign = ChosenBoardDesign;
             _snakeDesign = ChosenSnakeDesign;
+            _foodDesign = ChosenFoodDesign;
             _difficulty = ChosenDifficulty;
+            LoadHighscoreList();
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -61,18 +75,23 @@ namespace SnakeGame
             DifficultyManagement();
             DesignBoard();
             DesignSnake();
-            StartNewGame();
+            DesignFood();
+            //StartNewGame();
         }
 
         private void StartNewGame()
         {
-            foreach (var fruit in fruitPaths)
+            bdrWelcomeMessage.Visibility = Visibility.Collapsed;
+            bdrHighscoreList.Visibility = Visibility.Collapsed;
+            bdrEndOfGame.Visibility = Visibility.Collapsed;
+
+            /*foreach (var fruit in fruitPaths)
             {
                 if (!Fruits.Contains(fruit))
                 {
                     Fruits.Add(fruit);
                 }
-            }
+            }*/
             foreach (SnakePart snakeBodyPart in snakeParts)
             {
                 if (snakeBodyPart.UIElement != null)
@@ -231,7 +250,7 @@ namespace SnakeGame
         private void DrawSnakeFood()
         {
             Point foodPosition = GetNextFoodPosition();
-            string nextFruit = Fruits[rnd.Next(Fruits.Count)];
+            string nextFruit = Food[rnd.Next(Food.Count)];
             Image i = new Image();
             BitmapImage src = new BitmapImage();
             src.BeginInit();
@@ -249,8 +268,6 @@ namespace SnakeGame
 
         private void Window_Keyup(object sender, KeyEventArgs e)
         {
-            SnakeDirection originalSnakeDirection = snakeDirection;
-
             if (gameEnded)
             {
                 if (e.Key == Key.Space)
@@ -263,34 +280,46 @@ namespace SnakeGame
                 switch (e.Key)
                 {
                     case Key.Up:
-                        if (snakeDirection != SnakeDirection.Down && !NightMareMode)
+                        if (snakeDirection != SnakeDirection.Down && !NightMareMode && actionsTaken < 1)
                             snakeDirection = SnakeDirection.Up;
-                        else
+                        else if (snakeDirection != SnakeDirection.Right && actionsTaken < 1)
+                        {
                             snakeDirection = SnakeDirection.Down;
+                        }
+                        actionsTaken++;
                         break;
 
                     case Key.Down:
-                        if (snakeDirection != SnakeDirection.Up && !NightMareMode)
+                        if (snakeDirection != SnakeDirection.Up && !NightMareMode && actionsTaken < 1)
                             snakeDirection = SnakeDirection.Down;
-                        else
+                        else if (snakeDirection != SnakeDirection.Right && actionsTaken < 1)
+                        {
                             snakeDirection = SnakeDirection.Up;
+                        }
+                        actionsTaken++;
                         break;
 
                     case Key.Left:
-                        if (snakeDirection != SnakeDirection.Right && !NightMareMode)
+                        if (snakeDirection != SnakeDirection.Right && !NightMareMode && actionsTaken < 1)
                             snakeDirection = SnakeDirection.Left;
-                        else
+                        else if (snakeDirection != SnakeDirection.Right && actionsTaken < 1)
+                        {
                             snakeDirection = SnakeDirection.Right;
+                        }
+                        actionsTaken++;
                         break;
 
                     case Key.Right:
-                        if (snakeDirection != SnakeDirection.Left && !NightMareMode)
+                        if (snakeDirection != SnakeDirection.Left && !NightMareMode && actionsTaken < 1)
                             snakeDirection = SnakeDirection.Right;
-                        else
+                        else if (snakeDirection != SnakeDirection.Right && actionsTaken < 1)
+                        {
                             snakeDirection = SnakeDirection.Left;
+                        }
+                        actionsTaken++;
                         break;
 
-                    case Key.Enter:
+                    case Key.O:
                         GameOptions options = new GameOptions();
                         options.Show();
                         this.Close();
@@ -298,6 +327,10 @@ namespace SnakeGame
 
                     case Key.Space:
                         StartNewGame();
+                        break;
+
+                    case Key.Escape:
+                        this.Close();
                         break;
                 }
             }
@@ -418,6 +451,69 @@ namespace SnakeGame
             }
         }
 
+        private void DesignFood()
+        {
+            Food.Clear();
+            switch (_foodDesign)
+            {
+                case "Fruit":
+                    Food.Add(fruitsPath + "apple.png");
+                    Food.Add(fruitsPath + "banana.png");
+                    Food.Add(fruitsPath + "cherry.png");
+                    Food.Add(fruitsPath + "grape.png");
+                    Food.Add(fruitsPath + "kiwi.png");
+                    Food.Add(fruitsPath + "orange.png");
+                    Food.Add(fruitsPath + "peach.png");
+                    Food.Add(fruitsPath + "pineapple.png");
+                    Food.Add(fruitsPath + "raspberry.png");
+                    Food.Add(fruitsPath + "strawberry.png");
+                    Food.Add(fruitsPath + "watermelon.png");
+                    Food.Add(fruitsPath + "peach.png");
+                    Food.Add(fruitsPath + "blueberry.png");
+                    break;
+
+                case "Vegetables":
+                    Food.Add(fruitsPath + "carrots.png");
+                    Food.Add(fruitsPath + "eggplant.png");
+                    Food.Add(fruitsPath + "jalapeno.png");
+                    Food.Add(fruitsPath + "lemon.png");
+                    Food.Add(fruitsPath + "pumpkin.png");
+                    Food.Add(fruitsPath + "mushroom.png");
+                    Food.Add(fruitsPath + "raddish.png");
+                    Food.Add(fruitsPath + "tomato.png");
+                    break;
+
+                case "Only Green":
+                    Food.Add(fruitsPath + "watermelon.png");
+                    Food.Add(fruitsPath + "kiwi.png");
+                    Food.Add(fruitsPath + "jalapeno.png");
+                    break;
+
+                case "Only Red":
+                    Food.Add(fruitsPath + "apple.png");
+                    Food.Add(fruitsPath + "cherry.png");
+                    Food.Add(fruitsPath + "mushroom.png");
+                    Food.Add(fruitsPath + "raspberry.png");
+                    Food.Add(fruitsPath + "strawberry.png");
+                    Food.Add(fruitsPath + "watermelon.png");
+                    Food.Add(fruitsPath + "tomato.png");
+                    break;
+
+                case "Only Purple":
+                    Food.Add(fruitsPath + "eggplant.png");
+                    Food.Add(fruitsPath + "grape.png");
+                    Food.Add(fruitsPath + "lemon.png");
+                    Food.Add(fruitsPath + "raddish.png");
+                    break;
+
+                case "Only Orange":
+                    Food.Add(fruitsPath + "carrots.png");
+                    Food.Add(fruitsPath + "orange.png");
+                    Food.Add(fruitsPath + "pumpkin.png");
+                    break;
+            }
+        }
+
         private void DifficultyManagement()
         {
             switch (_difficulty)
@@ -448,6 +544,69 @@ namespace SnakeGame
             }
         }
 
+        private void LoadHighscoreList()
+        {
+            if (File.Exists("snake_highscorelist.xml"))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(List<SnakeHighscore>));
+                using (Stream reader = new FileStream("snake_highscorelist.xml", FileMode.Open))
+                {
+                    List<SnakeHighscore> templist = (List<SnakeHighscore>)serializer.Deserialize(reader);
+                    this.HighscoreList.Clear();
+                    foreach (var item in templist.OrderByDescending(x => x.Score))
+                    {
+                        this.HighscoreList.Add(item);
+                    }
+                }
+            }
+        }
+
+        private void SaveHighscoreList()
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<SnakeHighscore>));
+            using (Stream writer = new FileStream("snake_highscorelist.xml", FileMode.Create))
+            {
+                serializer.Serialize(writer, this.HighscoreList);
+            }
+        }
+
+        private void BtnAddToHighscoreList_Click(object sender, EventArgs e)
+        {
+            int newIndex = 0;
+
+            if ((this.HighscoreList.Count > 0) && (currentscore < this.HighscoreList.Max(x => x.Score)))
+            {
+                SnakeHighscore justAbove = this.HighscoreList.OrderByDescending(x => x.Score).First(x => x.Score >= currentscore);
+                if (justAbove != null)
+                {
+                    newIndex = this.HighscoreList.IndexOf(justAbove) + 1;
+                }
+            }
+
+            //Create and insert a new entry
+            this.HighscoreList.Insert(newIndex, new SnakeHighscore()
+            {
+                PlayerName = txtPlayerName.Text,
+                Score = currentscore,
+            });
+
+            while (this.HighscoreList.Count > MaxHighscoreListEntryCount)
+            {
+                this.HighscoreList.RemoveAt(MaxHighscoreListEntryCount);
+            }
+
+            SaveHighscoreList();
+
+            bdrNewHighscore.Visibility = Visibility.Collapsed;
+            bdrHighscoreList.Visibility = Visibility.Visible;
+        }
+
+        private void BtnShowHighscoreList_Click(object sender, EventArgs e)
+        {
+            bdrWelcomeMessage.Visibility = Visibility.Collapsed;
+            bdrHighscoreList.Visibility = Visibility.Visible;
+        }
+
         private void UpdateGameStatus()
         {
             this.tbStatusScore.Text = currentscore.ToString();
@@ -456,9 +615,27 @@ namespace SnakeGame
 
         private void EndGame()
         {
+            bool isNewHighscore = false;
+            if (currentscore > 0)
+            {
+                int lowestHighscore = (this.HighscoreList.Count > 0 ? this.HighscoreList.Min(x => x.Score) : 0);
+                if ((currentscore > lowestHighscore) || (this.HighscoreList.Count < MaxHighscoreListEntryCount))
+                {
+                    bdrNewHighscore.Visibility = Visibility.Visible;
+                    txtPlayerName.Focus();
+                    isNewHighscore = true;
+                }
+            }
+
+            if (!isNewHighscore)
+            {
+                tbFinalScore.Text = currentscore.ToString();
+                bdrEndOfGame.Visibility = Visibility.Visible;
+            }
+
             gameTickTimer.IsEnabled = false;
-            gameEnded = true;
-            MessageBox.Show("Ooops, seems like you died!\n\nTo Start a new game, press the space bar...", "Snake");
+            //gameEnded = true;
+            //MessageBox.Show("Ooops, seems like you died!\n\nTo Start a new game, press the space bar...", "Snake");
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)
@@ -468,6 +645,7 @@ namespace SnakeGame
 
         private void GameTickTimer_Tick(object sender, EventArgs e)
         {
+            actionsTaken = 0;
             MoveSnake();
         }
     }
