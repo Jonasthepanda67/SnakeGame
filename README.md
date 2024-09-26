@@ -15,11 +15,21 @@ This was a school project where we had to create our own Snake game and this is 
 - [X] Add Start game function
 - [X] Add Snake food/fruit
 - [X] Add Points
-- [ ] Add different difficulties
-- [ ] Add Nightmare Mode
-- [ ] Add different Board and Snake designs/styles
+- [X] Add different difficulties
+- [X] Add Nightmare Mode
+- [X] Add different Board and Snake designs/styles
+- [ ] Add Highscores
+- [ ] Add Sounds
+- [ ] Design a better GUI
 
 ## Changelog
+
+**V1.1.0**
+
+* Added multiple new designs for both the board and the snake
+* Added different difficulties including Nightmare Mode
+* Fixed some issues with the snake moving in weird a way
+* Added different fruits and displayed them with pictures
 
 **V1.0.0**
 
