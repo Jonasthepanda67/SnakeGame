@@ -30,6 +30,7 @@ Welcome to **SnakeGame**, a project developed for a school assignment. In this t
 - [ ] Add a way to clear leaderboards
 - [ ] Create better designs for the snake and board
 - [ ] Make it look more like a game with the new GUI
+- [ ] Make a leaderboard/highscore list for each difficulty
 
 ## 🚧 Known Issues
 *No major bugs reported so far!*
