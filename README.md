@@ -1,5 +1,3 @@
----
-
 # 🐍 SnakeGame
 **By Jonasthepanda**
 
@@ -62,5 +60,3 @@ Welcome to **SnakeGame**, a project developed for a school assignment. In this t
 
 ## 🔗 Tags & Links
 [View Tags](https://github.com/Jonasthepanda67/SnakeGame/tags)
-
----
