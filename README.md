@@ -1,6 +1,9 @@
 # 🐍 SnakeGame
 **By Jonasthepanda**
 
+## Table of contents
+*Not implemented yet...
+
 ## 📝 Description
 Welcome to **SnakeGame**, a project developed for a school assignment. In this take on the Snake game, you control a growing snake, collecting fruits and avoiding collisions with yourself or the walls. I’ve put my own spin on it with unique features like multiple difficulty levels, custom designs, and even a nightmare mode for the brave souls that don't know any better!
 
@@ -23,6 +26,10 @@ Welcome to **SnakeGame**, a project developed for a school assignment. In this t
 - [X] Unique board and snake designs
 - [ ] Add sound effects 🎶
 - [ ] Design a more modern and clean GUI 🎨
+- [ ] Add hotkey instructions
+- [ ] Add a way to clear leaderboards
+- [ ] Create better designs for the snake and board
+- [ ] Make it look more like a game with the new GUI
 
 ## 🚧 Known Issues
 *No major bugs reported so far!*
