@@ -18,11 +18,17 @@ This was a school project where we had to create our own Snake game and this is 
 - [X] Add different difficulties
 - [X] Add Nightmare Mode
 - [X] Add different Board and Snake designs/styles
-- [ ] Add Highscores
+- [X] Add Highscores
 - [ ] Add Sounds
 - [ ] Design a better GUI
 
 ## Changelog
+
+**V1.2.0**
+
+* Added different food designs
+* Added highscores
+* Made a few QOL changes
 
 **V1.1.0**
 
