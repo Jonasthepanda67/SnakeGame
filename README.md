@@ -24,6 +24,12 @@ This was a school project where we had to create our own Snake game and this is 
 
 ## Changelog
 
+**V1.3.0**
+
+* Made difficulties harder
+* Fixed some display issues
+* Made some QOL changes
+
 **V1.2.0**
 
 * Added different food designs
