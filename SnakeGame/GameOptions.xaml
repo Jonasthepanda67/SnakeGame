@@ -42,7 +42,7 @@
             <ComboBox x:Name="cbbSnakeDesign" Margin="0,10,0,0"></ComboBox>
             <WrapPanel Margin="0,20,0,10">
                 <RadioButton x:Name="BtnEasy" GroupName="Difficulty" Checked="DifficultyChecked">Easy</RadioButton>
-                <RadioButton x:Name="BtnNormal" GroupName="Difficulty" Checked="DifficultyChecked" IsChecked="True">Normal</RadioButton>
+                <RadioButton x:Name="BtnNormal" GroupName="Difficulty" Checked="DifficultyChecked">Normal</RadioButton>
                 <RadioButton x:Name="BtnHard" GroupName="Difficulty" Checked="DifficultyChecked">Hard</RadioButton>
                 <RadioButton x:Name="BtnNightmare" GroupName="Difficulty" Checked="DifficultyChecked">Nightmare</RadioButton>
             </WrapPanel>

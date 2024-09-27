@@ -25,8 +25,8 @@ namespace SnakeGame
         private bool gameEnded = false;
         private int SnakeSquareSize = 50;
         private const int SnakeStartLength = 3;
-        private int SnakeStartSpeed = 400;
-        private int SnakeSpeedThreshold = 100;
+        private const int SnakeStartSpeed = 400;
+        private const int SnakeSpeedThreshold = 100;
         private const int MaxHighscoreListEntryCount = 5;
 
         private SolidColorBrush snakeBodyBrush = Brushes.Green;
@@ -34,6 +34,8 @@ namespace SnakeGame
         private List<SnakePart> snakeParts = new List<SnakePart>();
 
         private string fruitsPath = @"C:\\Users\U427797\source\repos\SnakeGame\SnakeGame\Fruits\";
+
+        //private string[] fruitPaths;
         private List<string> Food = new();
 
         public enum SnakeDirection
@@ -60,6 +62,7 @@ namespace SnakeGame
         {
             InitializeComponent();
             gameTickTimer.Tick += GameTickTimer_Tick;
+            //fruitPaths = Directory.GetFiles(@"C:\Users\U427797\source\repos\SnakeGame\SnakeGame\Fruits\"); //change this
             _boardDesign = ChosenBoardDesign;
             _snakeDesign = ChosenSnakeDesign;
             _foodDesign = ChosenFoodDesign;
@@ -73,6 +76,7 @@ namespace SnakeGame
             DesignBoard();
             DesignSnake();
             DesignFood();
+            //StartNewGame();
         }
 
         private void StartNewGame()
@@ -80,8 +84,14 @@ namespace SnakeGame
             bdrWelcomeMessage.Visibility = Visibility.Collapsed;
             bdrHighscoreList.Visibility = Visibility.Collapsed;
             bdrEndOfGame.Visibility = Visibility.Collapsed;
-            bdrNewHighscore.Visibility = Visibility.Collapsed;
 
+            /*foreach (var fruit in fruitPaths)
+            {
+                if (!Fruits.Contains(fruit))
+                {
+                    Fruits.Add(fruit);
+                }
+            }*/
             foreach (SnakePart snakeBodyPart in snakeParts)
             {
                 if (snakeBodyPart.UIElement != null)
@@ -309,7 +319,7 @@ namespace SnakeGame
                         actionsTaken++;
                         break;
 
-                    case Key.F2:
+                    case Key.O:
                         GameOptions options = new GameOptions();
                         options.Show();
                         this.Close();
@@ -511,30 +521,24 @@ namespace SnakeGame
                 case "Easy":
                     GameArea.Height = 800;
                     GameArea.Width = 1300;
-                    SnakeStartSpeed = 400;
                     break;
 
                 case "Normal":
                     GameArea.Width = 1400;
                     GameArea.Height = 800;
                     SnakeSquareSize = 40;
-                    SnakeStartSpeed = 350;
                     break;
 
                 case "Hard":
                     GameArea.Width = 1450;
                     GameArea.Height = 900;
                     SnakeSquareSize = 30;
-                    SnakeStartSpeed = 275;
-                    SnakeSpeedThreshold = 50;
                     break;
 
                 case "Nightmare":
                     GameArea.Height = 900;
                     GameArea.Width = 1400;
                     SnakeSquareSize = 20;
-                    SnakeStartSpeed = 200;
-                    SnakeSpeedThreshold = 15;
                     NightMareMode = true;
                     break;
             }
@@ -630,6 +634,8 @@ namespace SnakeGame
             }
 
             gameTickTimer.IsEnabled = false;
+            //gameEnded = true;
+            //MessageBox.Show("Ooops, seems like you died!\n\nTo Start a new game, press the space bar...", "Snake");
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)
