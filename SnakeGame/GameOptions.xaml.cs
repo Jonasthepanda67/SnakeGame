@@ -25,10 +25,7 @@ namespace SnakeGame
         private List<string> boardDesigns;
         private List<string> snakeDesigns;
         private List<string> foodDesigns;
-        private string _checkedButton = "";
-
-        private enum _gameDifficulty
-        { Easy, Normal, Hard, Nightmare }
+        private string _checkedButton = "Normal";
 
         public GameOptions()
         {
@@ -65,18 +62,15 @@ namespace SnakeGame
 
         private void BtnStartGame_Click(object sender, RoutedEventArgs e)
         {
-            if (_checkedButton != "" && _checkedButton is not null)
+            if (cbbBoardDesign.SelectedItem is not null && cbbSnakeDesign.SelectedItem is not null && cbbFoodDesign is not null)
             {
-                if (cbbBoardDesign.SelectedItem is not null && cbbSnakeDesign.SelectedItem is not null && cbbFoodDesign is not null)
-                {
-                    chosenBoardDesign = cbbBoardDesign.SelectedItem.ToString();
-                    chosenSnakeDesign = cbbSnakeDesign.SelectedItem.ToString();
-                    chosenFoodDesign = cbbFoodDesign.SelectedItem.ToString();
-                }
-                MainWindow window = new MainWindow(_checkedButton, chosenBoardDesign, chosenSnakeDesign, chosenFoodDesign);
-                window.Show();
-                this.Close();
+                chosenBoardDesign = cbbBoardDesign.SelectedItem.ToString();
+                chosenSnakeDesign = cbbSnakeDesign.SelectedItem.ToString();
+                chosenFoodDesign = cbbFoodDesign.SelectedItem.ToString();
             }
+            MainWindow window = new MainWindow(_checkedButton, chosenBoardDesign, chosenSnakeDesign, chosenFoodDesign);
+            window.Show();
+            this.Close();
         }
 
         private void InsertIntoDropdowns()
