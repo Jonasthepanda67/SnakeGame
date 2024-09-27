@@ -27,6 +27,9 @@ Welcome to **SnakeGame**, a project developed for a school assignment. In this t
 ## 🚧 Known Issues
 *No major bugs reported so far!*
 
+## 🐞 Bug Reporting
+*Bug reporting isn't currently enabled for this project. If you encounter any issues, feel free to download the project and make your own improvements!*  
+
 ## 📜 Changelog
 
 ### **V1.3.0**
