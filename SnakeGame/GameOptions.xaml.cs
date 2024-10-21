@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,9 @@ namespace SnakeGame
     /// </summary>
     public partial class GameOptions : Window
     {
+        private string boardDesignFile = AppDomain.CurrentDomain.BaseDirectory + "BoardDesigns.txt";
+        private string snakeDesignFile = AppDomain.CurrentDomain.BaseDirectory + "SnakeDesigns.txt";
+        private string foodDesignFile = AppDomain.CurrentDomain.BaseDirectory + "FoodDesigns.txt";
         private string chosenBoardDesign = "White/Black";
         private string chosenSnakeDesign = "Green";
         private string chosenFoodDesign = "Fruit";
@@ -76,26 +80,9 @@ namespace SnakeGame
         private void InsertIntoDropdowns()
         {
             //Hard coded designs for now, will/should be changed later
-            boardDesigns.Add("White/Black");
-            boardDesigns.Add("Green");
-            boardDesigns.Add("Red/White");
-            boardDesigns.Add("Blue");
-            boardDesigns.Add("Yellow");
-            boardDesigns.Add("Gray");
-            boardDesigns.Add("Red");
-            snakeDesigns.Add("Green");
-            snakeDesigns.Add("Red");
-            snakeDesigns.Add("Blue");
-            snakeDesigns.Add("Yellow");
-            snakeDesigns.Add("Black");
-            snakeDesigns.Add("White");
-            snakeDesigns.Add("Brown");
-            foodDesigns.Add("Fruit");
-            foodDesigns.Add("Vegetables");
-            foodDesigns.Add("Only Red");
-            foodDesigns.Add("Only Green");
-            foodDesigns.Add("Only Purple");
-            foodDesigns.Add("Only Orange");
+            boardDesigns = ReadFromFile(boardDesignFile);
+            snakeDesigns = ReadFromFile(snakeDesignFile);
+            foodDesigns = ReadFromFile(foodDesignFile);
 
             foreach (var design in boardDesigns)
             {
@@ -118,6 +105,21 @@ namespace SnakeGame
                     cbbFoodDesign.Items.Add(design);
                 }
             }
+        }
+
+        private List<string> ReadFromFile(string file)
+        {
+            List<string> tempList = [];
+            string line;
+
+            using (StreamReader reader = new StreamReader(file))
+            {
+                while ((line = reader.ReadLine()) != null)
+                {
+                    tempList.Add(line);
+                }
+            }
+            return tempList;
         }
     }
 }

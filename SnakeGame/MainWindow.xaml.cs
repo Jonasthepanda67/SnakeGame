@@ -269,6 +269,7 @@ namespace SnakeGame
             {
                 switch (e.Key)
                 {
+                    case Key.W:
                     case Key.Up:
                         if (snakeDirection != SnakeDirection.Down && !NightMareMode && actionsTaken < 1)
                             snakeDirection = SnakeDirection.Up;
@@ -279,6 +280,7 @@ namespace SnakeGame
                         actionsTaken++;
                         break;
 
+                    case Key.S:
                     case Key.Down:
                         if (snakeDirection != SnakeDirection.Up && !NightMareMode && actionsTaken < 1)
                             snakeDirection = SnakeDirection.Down;
@@ -290,6 +292,7 @@ namespace SnakeGame
                         break;
 
                     case Key.Left:
+                    case Key.A:
                         if (snakeDirection != SnakeDirection.Right && !NightMareMode && actionsTaken < 1)
                             snakeDirection = SnakeDirection.Left;
                         else if (snakeDirection != SnakeDirection.Right && actionsTaken < 1)
@@ -300,6 +303,7 @@ namespace SnakeGame
                         break;
 
                     case Key.Right:
+                    case Key.D:
                         if (snakeDirection != SnakeDirection.Left && !NightMareMode && actionsTaken < 1)
                             snakeDirection = SnakeDirection.Right;
                         else if (snakeDirection != SnakeDirection.Right && actionsTaken < 1)
@@ -564,6 +568,11 @@ namespace SnakeGame
             {
                 serializer.Serialize(writer, this.HighscoreList);
             }
+        }
+
+        private void BtnClearHighscoreList_Click(object sender, EventArgs e)
+        {
+            this.HighscoreList.Clear();
         }
 
         private void BtnAddToHighscoreList_Click(object sender, EventArgs e)
