@@ -573,6 +573,7 @@ namespace SnakeGame
         private void BtnClearHighscoreList_Click(object sender, EventArgs e)
         {
             this.HighscoreList.Clear();
+            SaveHighscoreList();
         }
 
         private void BtnAddToHighscoreList_Click(object sender, EventArgs e)
