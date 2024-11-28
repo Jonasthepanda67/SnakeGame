@@ -2,7 +2,10 @@
 **By Jonasthepanda**
 
 ## Table of contents
-*Not implemented yet...
+- [🔧 Current Tasks & Future Plans](https://github.com/Jonasthepanda67/SnakeGame?tab=readme-ov-file#-current-tasks--future-plans)
+- [🐞 Bug Reporting](https://github.com/Jonasthepanda67/SnakeGame?tab=readme-ov-file#-bug-reporting)
+- [📜 Changelog](https://github.com/Jonasthepanda67/SnakeGame/tree/main?tab=readme-ov-file#-changelog)
+- [🔗 Tags & Links](https://github.com/Jonasthepanda67/SnakeGame?tab=readme-ov-file#-tags--links)
 
 ## 📝 Description
 Welcome to **SnakeGame**, a project developed for a school assignment. In this take on the Snake game, you control a growing snake, collecting fruits and avoiding collisions with yourself or the walls. I’ve put my own spin on it with unique features like multiple difficulty levels, custom designs, and even a nightmare mode for the brave souls that don't know any better!
