@@ -4,7 +4,7 @@
 ## Table of contents
 - [🔧 Current Tasks & Future Plans](https://github.com/Jonasthepanda67/SnakeGame?tab=readme-ov-file#-current-tasks--future-plans)
 - [🐞 Bug Reporting](https://github.com/Jonasthepanda67/SnakeGame?tab=readme-ov-file#-bug-reporting)
-- [📜 Changelog](https://github.com/Jonasthepanda67/SnakeGame/tree/main?tab=readme-ov-file#-changelog)
+- [📜 Changelog](https://github.com/Jonasthepanda67/SnakeGame?tab=readme-ov-file#-changelog)
 - [🔗 Tags & Links](https://github.com/Jonasthepanda67/SnakeGame?tab=readme-ov-file#-tags--links)
 
 ## 📝 Description
